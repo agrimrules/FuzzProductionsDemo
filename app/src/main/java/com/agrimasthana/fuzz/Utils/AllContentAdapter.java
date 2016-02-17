@@ -51,7 +51,7 @@ public class AllContentAdapter extends ArrayAdapter<String> {
             String imgurl=values.get(position);
             Picasso.with(context).load(imgurl)
                     .error(android.R.drawable.stat_notify_error)
-                    .resize(200,2t00).into(viewHolder.image);
+                    .resize(200,200).into(viewHolder.image);
         }
         else {
             viewHolder.text.setText(values.get(position));
