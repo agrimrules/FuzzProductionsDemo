@@ -12,7 +12,6 @@ import android.widget.ListView;
 import com.agrimasthana.fuzz.Model.Data;
 import com.agrimasthana.fuzz.R;
 import com.agrimasthana.fuzz.Rest.ApiAccess;
-import com.agrimasthana.fuzz.Utils.SharedprefAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,6 @@ import retrofit.Retrofit;
  */
 public class TextFragment extends ListFragment {
     ApiAccess api = new ApiAccess();
-    SharedprefAdapter shp = new SharedprefAdapter();
     ArrayList<String>text=new ArrayList<>();
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -50,13 +48,12 @@ public class TextFragment extends ListFragment {
             @Override
             public void onResponse(Response<List<Data>> response, Retrofit retrofit) {
                 List<Data> fin = response.body();
-                ArrayList<String> st = new ArrayList<String>();
                 for(Data dt : fin){
-                    if(dt.getData() !=null && dt.getData().matches(".*\\w.*") && dt.getType().equals("text")) {
-                        st.add(dt.getData());
+                    if(dt.getData() !=null && dt.getData().matches(".*\\w.*") && dt.getType().equals("text") && !dt.getData().matches("(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\\.(?:jpg|gif|png|jpeg))(?:\\?([^#]*))?(?:#(.*))?")) {
+                        text.add(dt.getData());
                     }
                 }
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1,st);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1,text);
                 setListAdapter(adapter);
             }
 

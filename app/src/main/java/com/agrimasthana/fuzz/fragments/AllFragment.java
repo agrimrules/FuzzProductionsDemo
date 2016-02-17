@@ -16,7 +16,6 @@ import com.agrimasthana.fuzz.Model.Data;
 import com.agrimasthana.fuzz.R;
 import com.agrimasthana.fuzz.Rest.ApiAccess;
 import com.agrimasthana.fuzz.Utils.AllContentAdapter;
-import com.agrimasthana.fuzz.Utils.SharedprefAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +30,7 @@ import retrofit.Retrofit;
  */
 public class AllFragment extends Fragment {
     ApiAccess api = new ApiAccess();
-    SharedprefAdapter shp = new SharedprefAdapter();
-    ArrayList<String> st = new ArrayList<>();
+    ArrayList<String> all = new ArrayList<>();
     ListView lv;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,17 +44,16 @@ public class AllFragment extends Fragment {
                 List<Data> fin = response.body();
                 for (Data dt : fin) {
                     if (dt.getData() != null && !dt.getData().equals("")){
-                        st.add(dt.getData());
+                        all.add(dt.getData());
                     }
                 }
-                shp.setStringArrayPref(getContext(), "json", st);
-                AllContentAdapter adapter = new AllContentAdapter(getContext(), st);
+                AllContentAdapter adapter = new AllContentAdapter(getContext(), all);
                 lv.setAdapter(adapter);
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Bundle bundle = new Bundle();
-                        String resource = st.get(position);
+                        String resource = all.get(position);
                         if(resource.matches("(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\\.(?:jpg|gif|png|jpeg))(?:\\?([^#]*))?(?:#(.*))?"))
                         {
                             String url = resource;
@@ -76,7 +73,7 @@ public class AllFragment extends Fragment {
 
             @Override
             public void onFailure(Throwable t) {
-                Log.w("Failure", "");
+                Log.w("Failure", t);
             }
 
         });
